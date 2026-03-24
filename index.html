@@ -1,367 +1,301 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Music Recommender Study</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <!-- ================================================ -->
-    <!-- PAGE 1: CONSENT                                  -->
-    <!-- ================================================ -->
-    <div id="page-consent" class="page">
-      <div class="container">
-        <div class="card">
-          <div class="study-title">Master's Thesis — Jönköping University</div>
-          <h1>Informed Consent</h1>
-          <p style="color: var(--text); font-size: 1rem; margin-bottom: 24px">
-            User Perceptions of Trust and Transparency in Music Recommendation
-            Explanations
-          </p>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>Music Recommender Study</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div class="phone-shell">
 
-          <h3>Introduction</h3>
-          <p>
-            You are invited to participate in a research study conducted as part
-            of a Master's thesis in User Experience Design at Jönköping
-            University, Sweden.
-          </p>
-          <p>
-            The purpose of this study is to investigate how different types of
-            explanations influence users' transparency and trust in music
-            recommendations.
-          </p>
+<!-- ════════════════════════════════════════════
+     PAGE 1: CONSENT
+════════════════════════════════════════════ -->
+<div id="page-consent" class="page active">
+  <div class="flat-page page-content">
+    <div class="logo">Jönköping University · Master's Thesis</div>
+    <h1>Informed Consent</h1>
+    <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-top:4px;">User Perceptions of Trust and Transparency in Music Recommendation Explanations</p>
 
-          <hr class="divider" />
+    <div class="flat-divider"></div>
 
-          <h3>What does participation involve?</h3>
-          <p>
-            If you choose to participate, you will interact with a music
-            recommendation prototype. You will first select and like a specific
-            song from a list of songs. The system will then show you recommended
-            songs along with explanations describing why they were recommended.
-          </p>
-          <p>
-            This process will be repeated a few times using slightly different
-            versions of the explanations, and after each interaction you will
-            answer a short questionnaire about your experience. The study takes
-            approximately 10 minutes to complete.
-          </p>
+    <h2>Introduction</h2>
+    <p>You are invited to participate in a research study conducted as part of a Master's thesis in User Experience Design at Jönköping University, Sweden. The purpose of this study is to investigate how different types of explanations influence users' transparency and trust in music recommendations.</p>
 
-          <hr class="divider" />
+    <h2>What does participation involve?</h2>
+    <p>You will interact with a music recommendation prototype, select songs you like, and view recommendations with explanations. You will answer a short questionnaire after each interaction. The study takes approximately <strong style="color:#fff">10 minutes</strong>.</p>
 
-          <h3>Who can participate?</h3>
-          <ul class="consent-list">
-            <li>Be 18 years or older</li>
-            <li>
-              Be familiar with music streaming platforms (e.g., Spotify, Apple
-              Music, YouTube Music)
-            </li>
-          </ul>
+    <h2>Who can participate?</h2>
+    <ul class="bullet-list">
+      <li>Be 18 years or older</li>
+      <li>Be familiar with music streaming platforms (e.g., Spotify, Apple Music, YouTube Music)</li>
+    </ul>
 
-          <hr class="divider" />
+    <h2>Voluntary Participation</h2>
+    <p>Participation is completely voluntary. You may stop or withdraw at any time without providing a reason.</p>
 
-          <h3>Voluntary Participation</h3>
-          <p>
-            Participation in this study is completely voluntary. You may stop
-            participating or withdraw from the study at any time without
-            providing a reason.
-          </p>
+    <h2>Data Protection</h2>
+    <p>All data is anonymous and used only for academic research. No personally identifiable information will be collected. Results may be reported in a master's thesis, but individual participants will not be identifiable.</p>
 
-          <hr class="divider" />
+    <h2>Contact</h2>
+    <p>Amela Music &amp; Jithinkumar Pazhachirayil Krishnankutty<br>Master's Students, User Experience Design<br>Jönköping University, Sweden</p>
 
-          <h3>Data Protection and Confidentiality</h3>
-          <p>
-            The data collected in this study will be anonymous and used only for
-            academic research purposes. No personally identifiable information
-            will be collected. The results may be reported in academic
-            publications or a master's thesis, but individual participants will
-            not be identifiable.
-          </p>
+    <div class="flat-divider"></div>
 
-          <hr class="divider" />
-
-          <h3>Contact Information</h3>
-          <p>
-            Amela Music — Master's Student, User Experience Design, Jönköping
-            University, Sweden
-          </p>
-          <p>
-            Jithinkumar Pazhachirayil Krishnankutty — Master's Student, User
-            Experience Design, Jönköping University, Sweden
-          </p>
-
-          <hr class="divider" />
-
-          <div class="checkbox-wrapper">
-            <input type="checkbox" id="consent-checkbox" />
-            <label for="consent-checkbox">
-              By checking this box, I confirm that I am 18 years or older, I
-              have read and understood the information above, and I voluntarily
-              agree to participate in this study.
-            </label>
-          </div>
-
-          <div class="btn-row">
-            <button class="btn btn-primary" onclick="handleConsent()">
-              I agree to participate →
-            </button>
-          </div>
-        </div>
-      </div>
+    <div class="consent-check">
+      <input type="checkbox" id="consent-cb"/>
+      <label for="consent-cb">I confirm that I am 18 or older, I have read and understood the information above, and I voluntarily agree to participate in this study.</label>
     </div>
 
-    <!-- ================================================ -->
-    <!-- PAGE 2: INSTRUCTIONS                             -->
-    <!-- ================================================ -->
-    <div id="page-instructions" class="page">
-      <div class="container">
-        <div class="card">
-          <div class="study-title">Instructions</div>
-          <h1>How this study works</h1>
-          <p>
-            In this study, you will interact with a prototype of a music
-            recommendation interface. Your task is to explore how the system
-            recommends songs and explains its recommendations.
-          </p>
+    <button class="pill-btn" onclick="handleConsent()">
+      <svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>
+      I agree to participate
+    </button>
+  </div>
+</div>
 
-          <hr class="divider" />
+<!-- ════════════════════════════════════════════
+     PAGE 2: INSTRUCTIONS
+════════════════════════════════════════════ -->
+<div id="page-instructions" class="page">
+  <div class="flat-page page-content">
+    <div class="logo">Instructions</div>
+    <h1>How this study works</h1>
+    <p>You will interact with a prototype of a music recommendation interface. Your task is to explore how the system recommends songs and explains its recommendations.</p>
 
-          <h3>What you will do</h3>
-          <p>
-            First, you will see a
-            <strong style="color: var(--text)">practice version</strong> of the
-            interface to help you become familiar with how it works. In this
-            step, you will select a song and view recommended songs. This step
-            is only for practice and does not include explanations.
-          </p>
-          <p>After the practice step, you will complete several short tasks:</p>
+    <div class="flat-divider"></div>
 
-          <div class="steps">
-            <div class="step">
-              <div class="step-num">1</div>
-              <p>Select a song you like from a list of songs.</p>
-            </div>
-            <div class="step">
-              <div class="step-num">2</div>
-              <p>The system will display a list of recommended songs.</p>
-            </div>
-            <div class="step">
-              <div class="step-num">3</div>
-              <p>
-                Each recommended song will include an explanation describing why
-                it was recommended.
-              </p>
-            </div>
-            <div class="step">
-              <div class="step-num">4</div>
-              <p>Please take a moment to read the explanations carefully.</p>
-            </div>
-            <div class="step">
-              <div class="step-num">5</div>
-              <p>
-                After viewing the recommendations, you will answer a short
-                questionnaire about your experience.
-              </p>
-            </div>
-          </div>
+    <h2>Practice round first</h2>
+    <p>You will start with a <strong style="color:#fff">practice version</strong> to get familiar with the interface. In this step you select a song and view recommendations — no explanations yet, and no questionnaire.</p>
 
-          <p>
-            This process will be repeated a few times using slightly different
-            versions of the explanations.
-          </p>
+    <div class="flat-divider"></div>
 
-          <div class="notice">
-            <strong>Important:</strong> Please pay attention to the explanations
-            provided for each recommendation, as you will be asked questions
-            about them.
-          </div>
+    <h2>Then the real tasks</h2>
+    <div class="step-list">
+      <div class="step-item"><div class="step-num">1</div><p>Select a song you like from a list.</p></div>
+      <div class="step-item"><div class="step-num">2</div><p>The system shows recommended songs.</p></div>
+      <div class="step-item"><div class="step-num">3</div><p>Each recommended song includes an explanation describing why it was recommended.</p></div>
+      <div class="step-item"><div class="step-num">4</div><p>Read the explanations carefully.</p></div>
+      <div class="step-item"><div class="step-num">5</div><p>Answer a short questionnaire about your experience.</p></div>
+    </div>
+    <p>This process is repeated a few times with slightly different explanation styles.</p>
 
-          <p>
-            The study will take approximately
-            <strong style="color: var(--text)">10 minutes</strong> to complete.
-          </p>
-
-          <hr class="divider" />
-
-          <div class="btn-row">
-            <button class="btn btn-primary" onclick="startPractice()">
-              Begin practice →
-            </button>
-          </div>
-        </div>
-      </div>
+    <div class="notice-box">
+      <strong style="color:#fff">Important:</strong> Please pay attention to the explanations — you will be asked questions about them after each round.
     </div>
 
-    <!-- ================================================ -->
-    <!-- PAGE 3: PRACTICE PROTOTYPE                       -->
-    <!-- ================================================ -->
-    <div id="page-practice" class="page">
-      <div class="container">
-        <div class="card">
-          <div class="study-title">Practice — No explanations yet</div>
-          <h2>Select a song you like</h2>
-          <p>
-            This is a practice round to help you get familiar with the
-            interface. Select any song from the list below. No questionnaire
-            follows this step.
-          </p>
+    <p>The study takes approximately <strong style="color:#fff">10 minutes</strong>.</p>
 
-          <div id="practice-song-grid" class="song-grid"></div>
+    <div style="height:16px"></div>
+    <button class="pill-btn" onclick="startPractice()">
+      Begin practice
+      <svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
 
-          <div class="notice">
-            This is the practice round — no explanations are shown here. After
-            this, the real tasks will begin.
-          </div>
+<!-- ════════════════════════════════════════════
+     PAGE 3: PRACTICE
+════════════════════════════════════════════ -->
+<div id="page-practice" class="page">
+  <div class="app-header">
+    <p style="font-size:11px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Practice Round</p>
+    <h1>Like a song to receive recommendations</h1>
+  </div>
 
-          <div class="btn-row">
-            <button
-              id="practice-next-btn"
-              class="btn btn-primary"
-              onclick="finishPractice()"
-              disabled
-            >
-              Continue to study →
-            </button>
-          </div>
-        </div>
-      </div>
+  <div class="page-content">
+    <div class="song-list" id="practice-song-list"></div>
+    <div style="height:80px"></div>
+  </div>
+
+  <div class="bottom-action">
+    <button class="pill-btn" id="practice-finish-btn" onclick="finishPractice()" disabled>
+      <svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2"><path d="M5 12l5 5L20 7"/></svg>
+      Finish practice
+    </button>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Home</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Search</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span>Library</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>Add</span>
+    </div>
+  </nav>
+</div>
+
+<!-- PRACTICE RECS PAGE -->
+<div id="page-practice-recs" class="page">
+  <div class="app-header">
+    <p style="font-size:11px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Practice Round</p>
+    <h1>Recommended songs</h1>
+  </div>
+  <div class="page-content">
+    <div class="rec-list" id="practice-rec-list"></div>
+    <div style="height:80px"></div>
+  </div>
+  <div class="bottom-action">
+    <button class="pill-btn" onclick="showPracticeModal()">
+      <svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+      Finish practice
+    </button>
+  </div>
+  <nav class="bottom-nav">
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>Search</span></div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Library</span></div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Add</span></div>
+  </nav>
+</div>
+
+<!-- PRACTICE COMPLETE MODAL -->
+<div id="modal-practice" class="modal-overlay">
+  <div class="modal-sheet">
+    <h2>Practice Complete!</h2>
+    <p>You will now continue to the real study.</p>
+    <p>You will see similar recommendation screens. This time, each recommended song will include an explanation describing why it was recommended.</p>
+    <p>Please read the explanations carefully, as you will answer questions about them. After each screen, you will complete a short questionnaire about your experience.</p>
+    <button class="pill-btn" onclick="startCondition()" style="background:var(--purple);color:#fff">
+      <svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+      Continue to the study
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 4: PROTOTYPE — SONG SELECTION
+════════════════════════════════════════════ -->
+<div id="page-prototype" class="page">
+  <div class="proto-progress">
+    <div class="progress-track"><div class="progress-fill" id="proto-progress-fill" style="width:0%"></div></div>
+    <div class="progress-meta">
+      <span id="proto-progress-label">Task 1 of 3</span>
+      <span id="proto-condition-label">Lyric-based</span>
+    </div>
+  </div>
+
+  <div class="app-header" style="padding-top:10px">
+    <h1>Like a song to receive recommendations</h1>
+  </div>
+
+  <div class="page-content">
+    <div class="song-list" id="prototype-song-list"></div>
+    <div style="height:80px"></div>
+  </div>
+
+  <div class="bottom-action">
+    <button class="pill-btn" id="proto-next-btn" onclick="goToPrototypeRecs()" disabled>
+      View recommendations
+      <svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>Search</span></div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Library</span></div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Add</span></div>
+  </nav>
+</div>
+
+<!-- PAGE 4b: PROTOTYPE RECS -->
+<div id="page-prototype-recs" class="page">
+  <div class="proto-progress">
+    <div class="progress-track"><div class="progress-fill" id="proto-recs-progress-fill" style="width:0%"></div></div>
+    <div class="progress-meta">
+      <span id="proto-recs-progress-label">Task 1 of 3</span>
+      <span id="proto-recs-condition-label">Lyric-based</span>
+    </div>
+  </div>
+  <div class="app-header" style="padding-top:10px">
+    <h1>Recommended songs</h1>
+    <p id="proto-recs-subtitle">Based on your selection</p>
+  </div>
+  <div class="page-content">
+    <div class="rec-list" id="prototype-rec-list"></div>
+    <div style="height:80px"></div>
+  </div>
+  <div class="bottom-action">
+    <button class="pill-btn" onclick="goToQuestionnaire()">
+      Go to questionnaire
+      <svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+  <nav class="bottom-nav">
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>Search</span></div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Library</span></div>
+    <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Add</span></div>
+  </nav>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 5: QUESTIONNAIRE
+════════════════════════════════════════════ -->
+<div id="page-questionnaire" class="page">
+  <div class="q-page-header">
+    <div class="condition-pill" id="q-condition-pill" style="margin:0 0 10px">Q 1 of 3</div>
+    <h2>Trust &amp; Transparency</h2>
+    <p>Answer based on the recommendations and explanations you just saw.</p>
+  </div>
+
+  <div class="page-content">
+    <div class="q-section">
+      <div class="q-section-title">Transparency</div>
+      <div class="q-section-desc">How clear and understandable were the explanations for the recommended songs?</div>
+      <div id="transparency-qs"></div>
     </div>
 
-    <!-- ================================================ -->
-    <!-- PAGE 4: PROTOTYPE (reused for all 3 conditions)  -->
-    <!-- ================================================ -->
-    <div id="page-prototype" class="page">
-      <div class="container">
-        <div class="progress-bar">
-          <div class="progress-track">
-            <div class="progress-fill" style="width: 0%"></div>
-          </div>
-          <div class="progress-label">Task 1 of 3</div>
-        </div>
+    <hr class="q-divider" style="margin:0 20px 20px"/>
 
-        <div class="card">
-          <div class="condition-badge" id="condition-badge">Task 1 of 3</div>
-          <h2 id="prototype-heading">Select a song you like</h2>
-          <p>
-            Choose one song from the list below. The system will then show you
-            recommendations with explanations.
-          </p>
-
-          <div id="prototype-song-grid" class="song-grid"></div>
-
-          <div id="recommendations-section" style="display: none">
-            <hr class="divider" />
-            <h3>Recommended songs</h3>
-            <p>
-              Based on your selection, here are songs you might enjoy. Read the
-              explanations carefully.
-            </p>
-            <div id="rec-list" class="rec-list"></div>
-          </div>
-
-          <hr class="divider" />
-          <div class="btn-row">
-            <button
-              id="prototype-next-btn"
-              class="btn btn-primary"
-              onclick="goToQuestionnaire()"
-              disabled
-            >
-              Go to questionnaire →
-            </button>
-          </div>
-        </div>
-      </div>
+    <div class="q-section">
+      <div class="q-section-title">Trust</div>
+      <div class="q-section-desc">How much do you trust the song recommendations based on the explanations you saw?</div>
+      <div id="trust-qs"></div>
     </div>
 
-    <!-- ================================================ -->
-    <!-- PAGE 5: QUESTIONNAIRE (reused for all 3)         -->
-    <!-- ================================================ -->
-    <div id="page-questionnaire" class="page">
-      <div class="container">
-        <div class="progress-bar">
-          <div class="progress-track">
-            <div class="progress-fill" style="width: 0%"></div>
-          </div>
-          <div class="progress-label">Task 1 of 3</div>
-        </div>
-
-        <div class="card">
-          <div class="condition-badge" id="q-condition-badge">
-            Questionnaire 1 of 3
-          </div>
-          <h2>Trust &amp; Transparency</h2>
-          <p>
-            Answer the questions below based on the recommendations and
-            explanations you just saw. There are no right or wrong answers.
-          </p>
-
-          <hr class="divider" />
-
-          <!-- TRANSPARENCY -->
-          <div class="q-section-label">Transparency</div>
-          <div class="q-section-desc">
-            How clear and understandable were the explanations for the
-            recommended songs?
-          </div>
-          <div id="transparency-questions"></div>
-
-          <hr class="divider" />
-
-          <!-- TRUST -->
-          <div class="q-section-label">Trust</div>
-          <div class="q-section-desc">
-            How much do you trust the song recommendations based on the
-            explanations you saw?
-          </div>
-          <div id="trust-questions"></div>
-
-          <hr class="divider" />
-          <div class="btn-row">
-            <button
-              id="q-submit-btn"
-              class="btn btn-primary"
-              onclick="submitQuestionnaire()"
-            >
-              Submit &amp; continue →
-            </button>
-          </div>
-        </div>
-      </div>
+    <div style="padding:0 20px 20px">
+      <button class="pill-btn" id="q-submit-btn" onclick="submitQuestionnaire()">
+        Submit &amp; continue
+        <svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
     </div>
+    <div style="height:20px"></div>
+  </div>
+</div>
 
-    <!-- ================================================ -->
-    <!-- PAGE 6: THANK YOU                                -->
-    <!-- ================================================ -->
-    <div id="page-thankyou" class="page">
-      <div class="container">
-        <div class="card" style="text-align: center">
-          <div class="thank-you-icon" style="margin: 0 auto 24px">🎶</div>
-          <h1>Thank you!</h1>
-          <p style="font-size: 1rem; color: var(--text); margin-bottom: 8px">
-            Your responses have been recorded.
-          </p>
-          <p>
-            Your participation in this study is greatly appreciated. Your
-            responses are completely anonymous and will only be used for
-            academic research purposes as part of a Master's thesis at Jönköping
-            University.
-          </p>
-          <hr class="divider" />
-          <p style="font-size: 13px">
-            If you have any questions about this study, please contact the
-            researchers:<br />
-            <strong style="color: var(--text)"
-              >Amela Music &amp; Jithinkumar Pazhachirayil Krishnankutty</strong
-            ><br />
-            Jönköping University, Sweden
-          </p>
-        </div>
-      </div>
+<!-- ════════════════════════════════════════════
+     PAGE 6: THANK YOU
+════════════════════════════════════════════ -->
+<div id="page-thankyou" class="page">
+  <div class="page-content">
+    <div class="thankyou-wrap">
+      <div class="thankyou-icon">🎶</div>
+      <h1>Thank you!</h1>
+      <div class="divider"></div>
+      <p>Your responses have been recorded. Your participation is greatly appreciated.</p>
+      <p style="margin-top:12px">All data is anonymous and will only be used for academic research as part of a Master's thesis at Jönköping University, Sweden.</p>
+      <p style="margin-top:16px; font-size:12px; color:rgba(255,255,255,0.3)">Amela Music &amp; Jithinkumar Pazhachirayil Krishnankutty</p>
     </div>
+  </div>
+</div>
 
-    <script src="js/data.js"></script>
-    <script src="js/app.js"></script>
-  </body>
+</div><!-- /phone-shell -->
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
 </html>
+

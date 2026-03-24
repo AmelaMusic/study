@@ -7,278 +7,310 @@
 const GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbxIUx35lQc8Jw0eaeu_sQ_JggSa7WafT-Zxo7CYWtkH0IB9bMetbZRp28xYOHjG3-x5/exec";
 
-// ---- STATE ----
+
+// ── State ──
 const state = {
-  participantId: null, // auto-generated anonymous ID
-  conditionOrder: null, // ["lyric","feature","example"] etc.
-  currentConditionIndex: 0, // 0, 1, 2
-  selectedSong: null, // song object chosen by participant
-  responses: [], // all questionnaire responses
+  participantId: null,
+  conditionOrder: null,
+  currentConditionIndex: 0,
+  selectedSong: null,
+  practiceSong: null,
+  responses: [],
   startTime: null,
 };
 
-// ---- INIT ----
+// ── Init ──
 document.addEventListener("DOMContentLoaded", () => {
   state.participantId = generateId();
   state.conditionOrder = assignConditionOrder();
   state.startTime = Date.now();
   showPage("page-consent");
+  renderSongList("practice-song-list", true);
 });
 
-// ---- ID & COUNTERBALANCING ----
+// ── Helpers ──
 function generateId() {
   return "P" + Math.random().toString(36).substr(2, 8).toUpperCase();
 }
 
 function assignConditionOrder() {
-  // Use a simple counter stored in localStorage to distribute evenly
-  // Falls back to random if localStorage unavailable
   try {
     const count = parseInt(localStorage.getItem("studyCount") || "0");
     localStorage.setItem("studyCount", count + 1);
     return CONDITION_ORDERS[count % CONDITION_ORDERS.length];
   } catch {
-    return CONDITION_ORDERS[
-      Math.floor(Math.random() * CONDITION_ORDERS.length)
-    ];
+    return CONDITION_ORDERS[Math.floor(Math.random() * CONDITION_ORDERS.length)];
   }
 }
 
-// ---- NAVIGATION ----
-function showPage(pageId) {
-  document
-    .querySelectorAll(".page")
-    .forEach((p) => p.classList.remove("active"));
-  const page = document.getElementById(pageId);
-  if (page) {
-    page.classList.add("active");
-    window.scrollTo(0, 0);
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  const el = document.getElementById(id);
+  if (el) { el.classList.add("active"); window.scrollTo(0,0); }
+  // Scroll content to top inside page
+  const content = el ? el.querySelector(".page-content") : null;
+  if (content) content.scrollTop = 0;
+}
+
+// ── Cover art ──
+function makeAlbumImg(song, cssClass) {
+  const img = document.createElement("img");
+  img.className = cssClass + " img-loading";
+  // Try Last.fm CDN (works well for popular tracks)
+  const query = encodeURIComponent(`${song.title} ${song.artist}`);
+  img.src = `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${query}&api_key=nokey&format=json`;
+  // Use a reliable fallback: colored gradient placeholder
+  img.onerror = () => {
+    img.replaceWith(makePlaceholder(song, cssClass));
+  };
+  img.onload = () => img.classList.remove("img-loading");
+  // Use a direct approach with the MusicBrainz CAA
+  img.src = `https://coverartarchive.org/release/${song.mbid}/front-250`;
+  return img;
+}
+
+function makePlaceholder(song, cssClass) {
+  const div = document.createElement("div");
+  div.className = cssClass.replace("cover","cover-placeholder").replace("rec-cover","rec-cover-placeholder");
+  div.textContent = getEmoji(song.title);
+  return div;
+}
+
+function getEmoji(title) {
+  const map = {
+    "Rolling": "🎵", "Whitney": "🎤", "See You": "🎸", "Dancing": "✨",
+    "Blinding": "🌃", "Poker": "🃏", "Lose": "🔥", "Bohemian": "👑",
+    "Someone": "💔", "Fix": "💛", "All of Me": "🎹", "Stay": "🌊",
+    "Heart": "🚢", "Because": "💖", "Vision": "🌹", "Un-break": "💔",
+    "When I": "🎹", "Let Her": "🍂", "Apologize": "🕐",
+    "Stayin": "🕺", "Super": "🌟", "Le Freak": "🎷", "Survive": "💪",
+    "Can't": "🌙", "Don't Start": "💃", "Levitating": "🚀", "Say So": "😎",
+    "Just Dance": "🎉", "Toxic": "⚡", "Gotta": "🙌", "Bad Romance": "🖤",
+    "Not Afraid": "🔥", "Till": "💥", "Numb": "🎸", "Remember": "🏆",
+    "Somebody": "👑", "Stairway": "🌤️", "Hotel": "🏨", "Comfortably": "🌀",
+  };
+  for (const [k, v] of Object.entries(map)) {
+    if (title.includes(k)) return v;
+  }
+  return "🎵";
+}
+
+// ── Song list renderer ──
+function renderSongList(containerId, isPractice) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = SONGS.map((song, i) => {
+    const img = `<img class="song-cover img-loading" src="https://coverartarchive.org/release/${song.mbid}/front-250" onerror="this.replaceWith(makeFallbackDiv('${song.title}','song-cover-placeholder'))" onload="this.classList.remove('img-loading')" alt="${song.title}">`;
+    return `
+    <div class="song-item" id="${containerId}-song-${song.id}" onclick="selectSong(${song.id}, '${containerId}', ${isPractice})">
+      <span class="song-num">${i + 1}</span>
+      ${img}
+      <div class="song-info">
+        <div class="song-title">${song.title}</div>
+        <div class="song-artist">${song.artist}</div>
+      </div>
+      <div class="song-heart">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// Fallback div for broken images (called from inline onerror)
+function makeFallbackDiv(title, cls) {
+  const d = document.createElement("div");
+  d.className = cls;
+  d.textContent = getEmoji(title);
+  return d;
+}
+
+// ── Song selection ──
+function selectSong(songId, containerId, isPractice) {
+  // Deselect all
+  document.querySelectorAll(`#${containerId} .song-item`).forEach(el => el.classList.remove("selected"));
+  // Select clicked
+  const el = document.getElementById(`${containerId}-song-${songId}`);
+  if (el) el.classList.add("selected");
+
+  const song = SONGS.find(s => s.id === songId);
+  if (isPractice) {
+    state.practiceSong = song;
+    document.getElementById("practice-finish-btn").disabled = false;
+  } else {
+    state.selectedSong = song;
+    document.getElementById("proto-next-btn").disabled = false;
   }
 }
 
-// ---- CONSENT PAGE ----
+// ── CONSENT ──
 function handleConsent() {
-  const checkbox = document.getElementById("consent-checkbox");
-  if (!checkbox.checked) {
+  if (!document.getElementById("consent-cb").checked) {
     alert("Please confirm that you agree to participate before continuing.");
     return;
   }
   showPage("page-instructions");
 }
 
-// ---- INSTRUCTIONS PAGE ----
+// ── INSTRUCTIONS ──
 function startPractice() {
   showPage("page-practice");
 }
 
-// ---- PRACTICE PAGE ----
-function renderPracticeSongs() {
-  const grid = document.getElementById("practice-song-grid");
-  if (!grid) return;
-  grid.innerHTML = SONGS.map(
-    (song) => `
-    <div class="song-card" onclick="selectPracticeSong(${song.id}, this)">
-      <span class="song-card-emoji">${song.emoji}</span>
-      <div class="song-card-info">
-        <div class="song-card-title">${song.title}</div>
-        <div class="song-card-artist">${song.artist}</div>
-      </div>
-      <div class="song-card-dot"></div>
-    </div>
-  `,
-  ).join("");
-}
-
-let practiceSongSelected = false;
-function selectPracticeSong(songId, el) {
-  document
-    .querySelectorAll("#practice-song-grid .song-card")
-    .forEach((c) => c.classList.remove("selected"));
-  el.classList.add("selected");
-  practiceSongSelected = true;
-  document.getElementById("practice-next-btn").disabled = false;
-}
-
+// ── PRACTICE ──
 function finishPractice() {
-  if (!practiceSongSelected) {
-    alert("Please select a song to continue.");
-    return;
-  }
-  startCondition();
+  if (!state.practiceSong) { alert("Please select a song first."); return; }
+  renderPracticeRecs();
+  showPage("page-practice-recs");
 }
 
-// ---- CONDITION (PROTOTYPE) ----
+function renderPracticeRecs() {
+  // Show recs for practice song (lyric condition, but hide explanation text)
+  const recs = RECOMMENDATIONS[state.practiceSong.id]["lyric"];
+  const container = document.getElementById("practice-rec-list");
+  container.innerHTML = recs.map(rec => `
+    <div class="rec-item">
+      <div class="rec-item-top">
+        <img class="rec-cover img-loading"
+          src="https://coverartarchive.org/release/${rec.mbid}/front-250"
+          onerror="this.replaceWith(makeFallbackDiv('${rec.title}','rec-cover-placeholder'))"
+          onload="this.classList.remove('img-loading')"
+          alt="${rec.title}">
+        <div class="rec-info">
+          <div class="rec-title">${rec.title}</div>
+          <div class="rec-artist">${rec.artist}</div>
+        </div>
+      </div>
+      <p class="rec-explanation-placeholder">Explanation will appear here in the next steps of the study</p>
+    </div>
+  `).join("");
+}
+
+function showPracticeModal() {
+  document.getElementById("modal-practice").classList.add("open");
+}
+
+// ── CONDITION / PROTOTYPE ──
 function startCondition() {
+  // Close modal if open
+  document.getElementById("modal-practice").classList.remove("open");
   state.selectedSong = null;
-  document.getElementById("prototype-next-btn").disabled = true;
-  renderConditionPage();
+
+  // Render song list fresh
+  renderSongList("prototype-song-list", false);
+
+  // Update progress
+  const step = state.currentConditionIndex + 1;
+  const condType = state.conditionOrder[state.currentConditionIndex];
+  const condLabel = CONDITION_LABELS[condType].label;
+
+  document.getElementById("proto-progress-fill").style.width = ((step - 1) / 3 * 100) + "%";
+  document.getElementById("proto-progress-label").textContent = `Task ${step} of 3`;
+  document.getElementById("proto-condition-label").textContent = condLabel;
+  document.getElementById("proto-next-btn").disabled = true;
+
   showPage("page-prototype");
 }
 
-function renderConditionPage() {
-  const conditionType = state.conditionOrder[state.currentConditionIndex];
-  const conditionInfo = CONDITION_LABELS[conditionType];
-  const stepNum = state.currentConditionIndex + 1;
+function goToPrototypeRecs() {
+  if (!state.selectedSong) { alert("Please select a song first."); return; }
 
-  // Update progress
-  updateProgress(stepNum, 3);
+  const step = state.currentConditionIndex + 1;
+  const condType = state.conditionOrder[state.currentConditionIndex];
+  const condLabel = CONDITION_LABELS[condType].label;
+  const recs = RECOMMENDATIONS[state.selectedSong.id][condType];
 
-  // Update badge
-  document.getElementById("condition-badge").textContent =
-    `Task ${stepNum} of 3 — ${conditionInfo.label} Explanations`;
+  // Update progress on recs page
+  document.getElementById("proto-recs-progress-fill").style.width = (step / 3 * 100) + "%";
+  document.getElementById("proto-recs-progress-label").textContent = `Task ${step} of 3`;
+  document.getElementById("proto-recs-condition-label").textContent = condLabel;
+  document.getElementById("proto-recs-subtitle").textContent = `Based on: ${state.selectedSong.title}`;
 
-  // Update heading
-  document.getElementById("prototype-heading").textContent =
-    `Select a song you like`;
-
-  // Render song grid
-  const grid = document.getElementById("prototype-song-grid");
-  grid.innerHTML = SONGS.map(
-    (song) => `
-    <div class="song-card" onclick="selectPrototypeSong(${song.id}, this)">
-      <span class="song-card-emoji">${song.emoji}</span>
-      <div class="song-card-info">
-        <div class="song-card-title">${song.title}</div>
-        <div class="song-card-artist">${song.artist}</div>
-      </div>
-      <div class="song-card-dot"></div>
-    </div>
-  `,
-  ).join("");
-
-  // Hide recommendations until song selected
-  document.getElementById("recommendations-section").style.display = "none";
-}
-
-function selectPrototypeSong(songId, el) {
-  document
-    .querySelectorAll("#prototype-song-grid .song-card")
-    .forEach((c) => c.classList.remove("selected"));
-  el.classList.add("selected");
-  state.selectedSong = SONGS.find((s) => s.id === songId);
-  showRecommendations();
-}
-
-function showRecommendations() {
-  const conditionType = state.conditionOrder[state.currentConditionIndex];
-  const recs = RECOMMENDATIONS[state.selectedSong.id][conditionType];
-  const conditionInfo = CONDITION_LABELS[conditionType];
-
-  const section = document.getElementById("recommendations-section");
-  section.style.display = "block";
-
-  document.getElementById("rec-list").innerHTML = recs
-    .map(
-      (rec) => `
+  // Render recs
+  const container = document.getElementById("prototype-rec-list");
+  container.innerHTML = recs.map(rec => `
     <div class="rec-item">
-      <div class="rec-item-header">
-        <span class="rec-item-emoji">${rec.emoji}</span>
-        <div class="rec-item-info">
-          <div class="rec-item-title">${rec.title}</div>
-          <div class="rec-item-artist">${rec.artist}</div>
+      <div class="rec-item-top">
+        <img class="rec-cover img-loading"
+          src="https://coverartarchive.org/release/${rec.mbid}/front-250"
+          onerror="this.replaceWith(makeFallbackDiv('${rec.title}','rec-cover-placeholder'))"
+          onload="this.classList.remove('img-loading')"
+          alt="${rec.title}">
+        <div class="rec-info">
+          <div class="rec-title">${rec.title}</div>
+          <div class="rec-artist">${rec.artist}</div>
         </div>
       </div>
-      <div class="explanation-tag">${conditionInfo.label}</div>
-      <div class="explanation-text">${rec.explanation}</div>
+      <p class="rec-explanation">${rec.explanation}</p>
     </div>
-  `,
-    )
-    .join("");
+  `).join("");
 
-  document.getElementById("prototype-next-btn").disabled = false;
-
-  // Smooth scroll to recommendations
-  setTimeout(
-    () => section.scrollIntoView({ behavior: "smooth", block: "start" }),
-    100,
-  );
+  showPage("page-prototype-recs");
 }
 
+// ── QUESTIONNAIRE ──
 function goToQuestionnaire() {
-  if (!state.selectedSong) {
-    alert("Please select a song first.");
-    return;
-  }
-  renderQuestionnaire();
+  const step = state.currentConditionIndex + 1;
+  const condType = state.conditionOrder[state.currentConditionIndex];
+  const condLabel = CONDITION_LABELS[condType].label;
+
+  document.getElementById("q-condition-pill").textContent = `Questionnaire ${step} of 3 — ${condLabel}`;
+
+  renderQuestionBlock("transparency-qs", TRANSPARENCY_QUESTIONS, "T");
+  renderQuestionBlock("trust-qs", TRUST_QUESTIONS, "R");
+
   showPage("page-questionnaire");
 }
 
-// ---- QUESTIONNAIRE ----
-function renderQuestionnaire() {
-  const conditionType = state.conditionOrder[state.currentConditionIndex];
-  const conditionInfo = CONDITION_LABELS[conditionType];
-  const stepNum = state.currentConditionIndex + 1;
-
-  updateProgress(stepNum, 3);
-  document.getElementById("q-condition-badge").textContent =
-    `Questionnaire ${stepNum} of 3 — ${conditionInfo.label}`;
-
-  renderQuestionSection("transparency-questions", TRANSPARENCY_QUESTIONS, "T");
-  renderQuestionSection("trust-questions", TRUST_QUESTIONS, "R");
-
-  document.getElementById("q-submit-btn").disabled = false;
-}
-
-function renderQuestionSection(containerId, questions, prefix) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = questions
-    .map(
-      (q, i) => `
+function renderQuestionBlock(containerId, questions, prefix) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = questions.map((q, i) => `
     <div class="q-item">
       <div class="q-text">${q}</div>
       <div class="likert">
-        ${[1, 2, 3, 4, 5]
-          .map(
-            (val) => `
-          <input type="radio" name="${prefix}_${i}" id="${prefix}_${i}_${val}" value="${val}">
-          <label for="${prefix}_${i}_${val}">${val}</label>
-        `,
-          )
-          .join("")}
+        ${[1,2,3,4,5].map(v => `
+          <input type="radio" name="${prefix}_${i}" id="${prefix}_${i}_${v}" value="${v}">
+          <label for="${prefix}_${i}_${v}">${v}</label>
+        `).join("")}
       </div>
       <div class="likert-labels">
         <span class="likert-label">Strongly disagree</span>
         <span class="likert-label">Strongly agree</span>
       </div>
     </div>
-  `,
-    )
-    .join("");
+  `).join("");
 }
 
 function submitQuestionnaire() {
-  // Validate all questions answered
-  const allQuestions = [
-    ...TRANSPARENCY_QUESTIONS.map((_, i) => `T_${i}`),
-    ...TRUST_QUESTIONS.map((_, i) => `R_${i}`),
+  // Validate
+  const allNames = [
+    ...TRANSPARENCY_QUESTIONS.map((_,i) => `T_${i}`),
+    ...TRUST_QUESTIONS.map((_,i) => `R_${i}`),
   ];
-
-  for (const name of allQuestions) {
-    const answered = document.querySelector(`input[name="${name}"]:checked`);
-    if (!answered) {
+  for (const name of allNames) {
+    if (!document.querySelector(`input[name="${name}"]:checked`)) {
       alert("Please answer all questions before continuing.");
       return;
     }
   }
 
-  // Collect responses
-  const conditionType = state.conditionOrder[state.currentConditionIndex];
-  const transparencyScores = TRANSPARENCY_QUESTIONS.map((_, i) =>
-    parseInt(document.querySelector(`input[name="T_${i}"]:checked`).value),
-  );
-  const trustScores = TRUST_QUESTIONS.map((_, i) =>
-    parseInt(document.querySelector(`input[name="R_${i}"]:checked`).value),
-  );
+  // Collect
+  const condType = state.conditionOrder[state.currentConditionIndex];
+  const tScores = TRANSPARENCY_QUESTIONS.map((_,i) =>
+    parseInt(document.querySelector(`input[name="T_${i}"]:checked`).value));
+  const rScores = TRUST_QUESTIONS.map((_,i) =>
+    parseInt(document.querySelector(`input[name="R_${i}"]:checked`).value));
 
   state.responses.push({
     conditionIndex: state.currentConditionIndex,
-    conditionType,
+    conditionType: condType,
     selectedSongId: state.selectedSong.id,
     selectedSongTitle: state.selectedSong.title,
-    transparency: transparencyScores,
-    trust: trustScores,
-    transparencyMean: mean(transparencyScores),
-    trustMean: mean(trustScores),
+    transparency: tScores,
+    trust: rScores,
+    transparencyMean: avg(tScores),
+    trustMean: avg(rScores),
   });
 
   state.currentConditionIndex++;
@@ -291,63 +323,35 @@ function submitQuestionnaire() {
   }
 }
 
-// ---- DATA SUBMISSION ----
+// ── DATA SUBMISSION ──
 async function submitAllData() {
   const payload = {
     participantId: state.participantId,
     conditionOrder: state.conditionOrder.join("-"),
     durationSeconds: Math.round((Date.now() - state.startTime) / 1000),
-    responses: state.responses,
-    // Flat format for easy analysis in Sheets
-    flat: state.responses.map((r) => ({
+    flat: state.responses.map(r => ({
       participantId: state.participantId,
       conditionType: r.conditionType,
-      conditionIndex: r.conditionIndex,
+      conditionIndex: r.conditionIndex + 1,
       selectedSong: r.selectedSongTitle,
-      T1: r.transparency[0],
-      T2: r.transparency[1],
-      T3: r.transparency[2],
-      T4: r.transparency[3],
-      T5: r.transparency[4],
-      R1: r.trust[0],
-      R2: r.trust[1],
-      R3: r.trust[2],
-      R4: r.trust[3],
+      T1: r.transparency[0], T2: r.transparency[1], T3: r.transparency[2],
+      T4: r.transparency[3], T5: r.transparency[4],
+      R1: r.trust[0], R2: r.trust[1], R3: r.trust[2], R4: r.trust[3],
       transparencyMean: r.transparencyMean,
       trustMean: r.trustMean,
-    })),
+    }))
   };
-
   try {
     await fetch(GOOGLE_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
+      method: "POST", mode: "no-cors",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-  } catch (err) {
-    console.error("Submission error:", err);
-    // Study still completes — data stored in console as fallback
+  } catch (e) {
     console.log("DATA BACKUP:", JSON.stringify(payload));
   }
 }
 
-// ---- HELPERS ----
-function mean(arr) {
-  return Math.round((arr.reduce((a, b) => a + b, 0) / arr.length) * 100) / 100;
+function avg(arr) {
+  return Math.round((arr.reduce((a,b) => a+b, 0) / arr.length) * 100) / 100;
 }
-
-function updateProgress(current, total) {
-  const pct = Math.round((current / total) * 100);
-  document
-    .querySelectorAll(".progress-fill")
-    .forEach((el) => (el.style.width = pct + "%"));
-  document
-    .querySelectorAll(".progress-label")
-    .forEach((el) => (el.textContent = `Task ${current} of ${total}`));
-}
-
-// Initialise practice song grid when DOM is ready
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(renderPracticeSongs, 100);
-});
