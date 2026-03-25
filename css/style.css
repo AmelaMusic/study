@@ -23,7 +23,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; background: #000; }
+html, body { height: 100%; background: #ffffff; }
 
 body {
   font-family: var(--font);
@@ -31,7 +31,7 @@ body {
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  background: #0a0a0a;
+  background: #ffffff;
 }
 
 /* ── Phone Shell ── */
@@ -75,6 +75,7 @@ body {
   background: linear-gradient(180deg, var(--purple) 0%, #3d1a52 60%, var(--bg) 100%);
   padding: 16px 20px 20px;
   flex-shrink: 0;
+  margin-top: 15px;
 }
 .app-header h1 {
   font-size: 22px;
@@ -376,14 +377,16 @@ body {
   margin-top: 2px;
 }
 .rec-explanation {
-  font-size: 13px;
-  color: var(--white-70);
+  font-size: 17px;
+  /* color: var(--white-70); */
+  color: rgb(213, 213, 213);
   line-height: 1.55;
   padding-left: 0;
 }
 .rec-explanation-placeholder {
-  font-size: 13px;
-  color: var(--white-40);
+  font-size: 17px;
+  /* color: var(--white-40); */
+  color: rgb(213, 213, 213);
   font-style: italic;
   line-height: 1.55;
 }
@@ -422,7 +425,7 @@ body {
   flex-shrink: 0;
 }
 .progress-track {
-  height: 2px;
+  height: 7px;
   background: var(--white-10);
   border-radius: 2px;
   overflow: hidden;
@@ -438,7 +441,8 @@ body {
   justify-content: space-between;
   margin-top: 6px;
   font-size: 11px;
-  color: var(--white-40);
+  /* color: var(--white-40); */
+  color: rgb(217, 217, 217)
 }
 
 /* ── Condition pill ── */
@@ -577,13 +581,14 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1.5px solid var(--white-10);
+  border: 1.5px solid var(--white-40);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
   font-weight: 500;
-  color: var(--white-40);
+  /* color: var(--white-40); */
+  color: #cecece;
   cursor: pointer;
   transition: all 0.15s ease;
   flex-shrink: 0;
@@ -601,7 +606,7 @@ body {
   margin-top: 6px;
   padding: 0 2px;
 }
-.likert-label { font-size: 10px; color: var(--white-40); }
+.likert-label { font-size: 10px; color: rgb(199, 110, 199); }
 
 .q-divider {
   border: none;

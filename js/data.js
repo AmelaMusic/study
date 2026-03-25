@@ -810,9 +810,4 @@ const CONDITION_LABELS = {
   example: { label: "Example-based" },
 };
 
-// Cover art helper — uses Last.fm as primary, colored gradient as fallback
-function getCoverUrl(mbid, title, artist) {
-  // Use Last.fm API (free, no key needed for basic use via this proxy pattern)
-  // Falls back gracefully if image fails to load
-  return `https://lastfm.freetls.fastly.net/i/u/174s/${mbid}.png`;
-}
+
