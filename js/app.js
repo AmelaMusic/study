@@ -345,6 +345,8 @@ function submitQuestionnaire() {
     goToPrototypeRecs();
   } else {
     submitAllData();
+    document.getElementById("display-participant-id").textContent =
+      state.participantId;
     showPage("page-thankyou");
   }
 }
