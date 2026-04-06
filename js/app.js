@@ -31,15 +31,7 @@ function generateId() {
 }
 
 function assignConditionOrder() {
-  try {
-    const count = parseInt(localStorage.getItem("studyCount") || "0");
-    localStorage.setItem("studyCount", count + 1);
-    return CONDITION_ORDERS[count % CONDITION_ORDERS.length];
-  } catch {
-    return CONDITION_ORDERS[
-      Math.floor(Math.random() * CONDITION_ORDERS.length)
-    ];
-  }
+  return CONDITION_ORDERS[Math.floor(Math.random() * CONDITION_ORDERS.length)];
 }
 
 function showPage(id) {
